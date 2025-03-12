@@ -21,6 +21,10 @@ RUN apt-get update && apt-get install -y \
     jq \
     && rm -rf /var/lib/apt/lists/*
 
+RUN    curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+RUN curl -sS https://starship.rs/install.sh | sh
+RUN eval "$(starship init bash)"
+
 # Install GitHub CLI (gh)
 RUN mkdir -p -m 755 /etc/apt/keyrings && \
     wget -qO /etc/apt/keyrings/githubcli-archive-keyring.gpg \
@@ -47,9 +51,9 @@ WORKDIR /opt/ann-benchmarks/aerospike
 RUN python3 -m venv venv && \
     . venv/bin/activate && \
     pip install --upgrade pip && \
-    if [ -f ../requirements.txt ]; then pip install -r ../requirements.txt; fi\
+    if [ -f ../requirements.txt ]; then pip install -r ../requirements.txt; fi &&\
     if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
+WORKDIR /opt/
 
 # Install latest version of asvec (pre if pre is latest)
 RUN mkdir -p /usr/local/bin && \
